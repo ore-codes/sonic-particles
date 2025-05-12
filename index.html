@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Audio Visualizer</title>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+    }
+
+    canvas {
+      display: block;
+    }
+
+    #controls {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      z-index: 10;
+    }
+
+    button {
+      background: #111;
+      border: 1px solid #fff;
+      color: #fff;
+      padding: 8px 16px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #fff;
+      color: #111;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="controls">
+    <button id="toggleBtn">Play</button>
+    <button id="micBtn">Mic Mode</button>
+  </div>
+
+  <div id="noteDisplay"
+    style="position: absolute; top: 20px; left: 50%; transform: translateX(-50%); font-size: 24px; color: white; font-family: monospace;">
+  </div>
+
+
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.161.0/build/three.module.js",
+        "jsm/": "https://cdn.jsdelivr.net/npm/three@0.161.0/examples/jsm/"
+      }
+    }
+  </script>
+
+  <script src="https://unpkg.com/tone"></script>
+  <script type="module" src="script.js"></script>
+</body>
+
+</html>
