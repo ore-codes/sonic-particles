@@ -1,7 +1,6 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'jsm/controls/OrbitControls.js';
 
-// Scene setup
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 const renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -12,7 +11,6 @@ const controls = new OrbitControls(camera, renderer.domElement);
 scene.background = new THREE.Color(0x000011);
 camera.position.z = 100;
 
-// Particle setup
 let targetOpacity = 0.1;
 const particleCount = 1000;
 const side = Math.cbrt(particleCount) | 0;
@@ -49,12 +47,20 @@ const material = new THREE.PointsMaterial({
 const points = new THREE.Points(geometry, material);
 scene.add(points);
 
-// Audio setup
 let isPlaying = false;
 let micMode = false;
 
-const fft = new Tone.FFT(64);
+const synthFFT = new Tone.FFT(128);
+const micMeter = new Tone.Meter({
+  smoothing: 0.85,
+  normalRange: true
+});
 const mic = new Tone.UserMedia();
+
+let previousValue = 0;
+const smoothingFactor = 0.08;
+const minVolume = 0.0001;
+const maxVolume = 0.003;
 
 const synth = new Tone.MonoSynth({
   oscillator: { type: 'sawtooth' },
@@ -64,7 +70,7 @@ const synth = new Tone.MonoSynth({
     sustain: 0.1,
     release: 0.3
   }
-}).connect(fft).toDestination();
+}).connect(synthFFT).toDestination();
 
 const scales = [
   ['C4', 'D4', 'E4', 'G4', 'A4'],
@@ -108,6 +114,7 @@ toggleBtn.addEventListener('click', async () => {
     isPlaying = false;
     toggleBtn.textContent = 'Play';
     targetOpacity = 0.1;
+    noteDisplay.textContent = '';
   }
 });
 
@@ -115,7 +122,7 @@ micBtn.addEventListener('click', async () => {
   if (!micMode) {
     await Tone.start();
     await mic.open();
-    mic.connect(fft);
+    mic.connect(micMeter).toDestination();
     micMode = true;
     micBtn.textContent = 'Disable Mic Mode';
 
@@ -125,7 +132,7 @@ micBtn.addEventListener('click', async () => {
       isPlaying = false;
       toggleBtn.textContent = 'Play';
     }
-
+    noteDisplay.textContent = '';
     targetOpacity = 1;
   } else {
     mic.disconnect();
@@ -136,7 +143,6 @@ micBtn.addEventListener('click', async () => {
   }
 });
 
-// Animate
 function animate() {
   requestAnimationFrame(animate);
 
@@ -148,18 +154,43 @@ function animate() {
       pos[i] += (initialPositions[i] - pos[i]) * 0.05;
     }
   } else {
-    const values = fft.getValue();
-    for (let i = 0; i < particleCount; i++) {
-      const i3 = i * 3;
-      const x = initialPositions[i3 + 0];
-      const y = initialPositions[i3 + 1];
-      const z = initialPositions[i3 + 2];
-      const energy = values[i % values.length];
-      const wave = Math.sin(Date.now() * 0.002 + x * 0.05 + y * 0.05) * (energy + 140) * 0.05;
+    const time = Date.now() * 0.001;
 
-      pos[i3 + 0] = x;
-      pos[i3 + 1] = y + wave;
-      pos[i3 + 2] = z;
+    if (micMode) {
+      const currentValue = micMeter.getValue();
+      const normalizedVolume = Math.max(0, Math.min(1,
+        (currentValue - minVolume) / (maxVolume - minVolume)
+      ));
+
+      previousValue = previousValue * (1 - smoothingFactor) + normalizedVolume * smoothingFactor;
+
+      for (let i = 0; i < particleCount; i++) {
+        const i3 = i * 3;
+        const x = initialPositions[i3 + 0];
+        const y = initialPositions[i3 + 1];
+        const z = initialPositions[i3 + 2];
+
+        const amplitude = previousValue * 12;
+        const wave = Math.sin(time * 0.8 + i * 0.08) * amplitude * 0.7;
+
+        pos[i3 + 0] = x + wave;
+        pos[i3 + 1] = y + amplitude * 1.5;
+        pos[i3 + 2] = z + wave;
+      }
+    } else {
+      const values = synthFFT.getValue();
+      for (let i = 0; i < particleCount; i++) {
+        const i3 = i * 3;
+        const x = initialPositions[i3 + 0];
+        const y = initialPositions[i3 + 1];
+        const z = initialPositions[i3 + 2];
+
+        const energy = values[i % values.length];
+        const wave = Math.sin(time + x * 0.05 + y * 0.05) * (energy + 140) * 0.05;
+        pos[i3 + 0] = x;
+        pos[i3 + 1] = y + wave;
+        pos[i3 + 2] = z;
+      }
     }
   }
 
