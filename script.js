@@ -186,7 +186,7 @@ function animate() {
         const z = initialPositions[i3 + 2];
 
         const energy = values[i % values.length];
-        const wave = Math.sin(time + x * 0.05 + y * 0.05) * (energy + 140) * 0.05;
+        const wave = Math.sin(time + x * 0.15 + y * 0.15) * (energy + 140) * 0.15;
         pos[i3 + 0] = x;
         pos[i3 + 1] = y + wave;
         pos[i3 + 2] = z;
