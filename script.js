@@ -9,12 +9,12 @@ document.body.appendChild(renderer.domElement);
 
 const controls = new OrbitControls(camera, renderer.domElement);
 scene.background = new THREE.Color(0x000011);
-camera.position.z = 100;
+camera.position.z = 32;
 
 let targetOpacity = 0.1;
 const particleCount = 1000;
 const side = Math.cbrt(particleCount) | 0;
-const spacing = 5;
+const spacing = 1;
 const positions = new Float32Array(particleCount * 3);
 const initialPositions = new Float32Array(particleCount * 3);
 const geometry = new THREE.BufferGeometry();
@@ -40,7 +40,7 @@ geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
 
 const material = new THREE.PointsMaterial({
   color: 0x44ccff,
-  size: 1.5,
+  size: .5,
   transparent: true,
   opacity: 0.1
 });
@@ -58,9 +58,9 @@ const micMeter = new Tone.Meter({
 const mic = new Tone.UserMedia();
 
 let previousValue = 0;
-const smoothingFactor = 0.08;
-const minVolume = 0.0001;
-const maxVolume = 0.003;
+const smoothingFactor = 0.05;
+const minVolume = 0.005;
+const maxVolume = 0.02;
 
 const synth = new Tone.MonoSynth({
   oscillator: { type: 'sawtooth' },
@@ -170,8 +170,8 @@ function animate() {
         const y = initialPositions[i3 + 1];
         const z = initialPositions[i3 + 2];
 
-        const amplitude = previousValue * 12;
-        const wave = Math.sin(time * 0.8 + i * 0.08) * amplitude * 0.7;
+        const amplitude = previousValue * 15;
+        const wave = Math.sin(time * 0.8 + i * 0.08) * amplitude * 0.4;
 
         pos[i3 + 0] = x + wave;
         pos[i3 + 1] = y + amplitude * 1.5;
