@@ -4,7 +4,7 @@ An interactive audio-visual experience that transforms sound into mesmerizing pa
 
 ## Live Demo
 
-Check out the live demo at [https://sonic-particles.vercel.app/](https://sonic-particles.vercel.app/)
+Check out the live demo at [https://ore-codes.github.io/sonic-particles](https://ore-codes.github.io/sonic-particles)
 
 ## Features
 

@@ -5,37 +5,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Sonic Particles</title>
-  <style>
-    body {
-      margin: 0;
-      overflow: hidden;
-    }
-
-    canvas {
-      display: block;
-    }
-
-    #controls {
-      position: absolute;
-      top: 20px;
-      left: 20px;
-      z-index: 10;
-    }
-
-    button {
-      background: #111;
-      border: 1px solid #fff;
-      color: #fff;
-      padding: 8px 16px;
-      font-size: 16px;
-      cursor: pointer;
-    }
-
-    button:hover {
-      background: #fff;
-      color: #111;
-    }
-  </style>
+  <link rel="stylesheet" href="styles.css">
+  <script async src="https://unpkg.com/es-module-shims@1.8.0/dist/es-module-shims.js"></script>
 </head>
 
 <body>
@@ -48,6 +19,17 @@
     style="position: absolute; top: 20px; left: 50%; transform: translateX(-50%); font-size: 24px; color: white; font-family: monospace;">
   </div>
 
+  <a href="https://github.com/ore-codes"
+    style="position: fixed; bottom: 10px; right: 10px; color: rgba(255,255,255,0.3); text-decoration: none; font-family: monospace; font-size: 12px;"
+    onmouseover="this.style.color='rgba(255,255,255,0.6)'" onmouseout="this.style.color='rgba(255,255,255,0.3)'">
+    github
+  </a>
+  <a href="https://ore-codes.github.io"
+    style="position: fixed; bottom: 10px; right: 100px; color: rgba(255,255,255,0.3); text-decoration: none; font-family: monospace; font-size: 12px;"
+    onmouseover="this.style.color='rgba(255,255,255,0.6)'" onmouseout="this.style.color='rgba(255,255,255,0.3)'">
+    portfolio
+  </a>
+
   <script type="importmap">
     {
       "imports": {
@@ -59,12 +41,6 @@
 
   <script src="https://unpkg.com/tone"></script>
   <script type="module" src="script.js"></script>
-
-  <a href="https://github.com/ore-codes"
-    style="position: fixed; bottom: 10px; right: 10px; color: rgba(255,255,255,0.3); text-decoration: none; font-family: monospace; font-size: 12px;"
-    onmouseover="this.style.color='rgba(255,255,255,0.6)'" onmouseout="this.style.color='rgba(255,255,255,0.3)'">
-    github.com/ore-codes
-  </a>
 </body>
 
 </html>
